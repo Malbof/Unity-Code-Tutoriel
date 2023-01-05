@@ -1,4 +1,3 @@
-
 using UnityEngine;
 
 public class EnemyPatrol : MonoBehaviour
@@ -6,6 +5,8 @@ public class EnemyPatrol : MonoBehaviour
 
     public float speed;
     public Transform[] waypoints;
+
+    public int damageOnCollision = 20;
 
     public SpriteRenderer graphics;
     private Transform target;
@@ -34,4 +35,17 @@ public class EnemyPatrol : MonoBehaviour
             graphics.flipX = !graphics.flipX;
         }
     }
+    //we use this method to make the player take the damage from the ennemy
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        //this condition take the component Player health and takeDamage used is the HealthBar script. If the ennemi enter in collision of the player he take  damage using (damageOnCollision)
+        //from the ennemy
+        if (collision.transform.CompareTag("Player"))
+        {
+            PlayerHealth playerHealth = collision.transform.GetComponent<PlayerHealth>();
+            playerHealth.TakeDamage(damageOnCollision);
+        }
+    }
+
+
 }

@@ -8,22 +8,25 @@ public class PlayerMovement : MonoBehaviour
     private bool IsJumping ;
     private bool isGrounded;
 
-    public Transform GroundCheckLeft;
-    public Transform GroundCheckRight;
+    public Transform GroundCheck;
+    public float groundCheckRadius;
+    public LayerMask collisionLayers;
 
     public Rigidbody2D rb;
     public Animator animator;
     public SpriteRenderer spriteRenderer;
 
     private Vector3 velocity = Vector3.zero;
+    private float horizontalMovement;
 
-    void FixedUpdate()
+
+    private void Update()
     {
         // Check is the player is on the floot to permit to jump
-        isGrounded = Physics2D.OverlapArea(GroundCheckLeft.position, GroundCheckRight.position);
+        isGrounded = Physics2D.OverlapCircle(GroundCheck.position, groundCheckRadius, collisionLayers);
 
         //movement of the player on the horizental axes
-        float horizontalMovement = Input.GetAxis("Horizontal") * moveSpeed * Time.deltaTime;
+        horizontalMovement = Input.GetAxis("Horizontal") * moveSpeed * Time.deltaTime;
 
         //condition of the jump
         if (Input.GetButtonDown("Jump") && isGrounded)
@@ -31,8 +34,6 @@ public class PlayerMovement : MonoBehaviour
             IsJumping = true;
         }
 
-        //Fonction of the Player to move
-        MovePlayer(horizontalMovement);
 
         //Fonction used to flip the direction of the player animation
         Flip(rb.velocity.x);
@@ -40,6 +41,14 @@ public class PlayerMovement : MonoBehaviour
         //Used for the character animation (Math fonction is used because the speed to the back is negative
         float characterVelocity = Mathf.Abs(rb.velocity.x);
         animator.SetFloat("Speed", characterVelocity);
+    }
+
+    void FixedUpdate()
+    {
+
+        //Fonction of the Player to move
+        MovePlayer(horizontalMovement);
+
     }
 
     //Fonction of the player movement and his parameter
@@ -66,5 +75,11 @@ public class PlayerMovement : MonoBehaviour
         {
             spriteRenderer.flipX = true;
         }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(GroundCheck.position, groundCheckRadius);
     }
 }
