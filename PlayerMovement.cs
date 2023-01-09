@@ -22,11 +22,10 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        // Check is the player is on the floot to permit to jump
-        isGrounded = Physics2D.OverlapCircle(GroundCheck.position, groundCheckRadius, collisionLayers);
+        
 
         //movement of the player on the horizental axes
-        horizontalMovement = Input.GetAxis("Horizontal") * moveSpeed * Time.deltaTime;
+        horizontalMovement = Input.GetAxis("Horizontal") * moveSpeed * Time.fixedDeltaTime;
 
         //condition of the jump
         if (Input.GetButtonDown("Jump") && isGrounded)
@@ -45,6 +44,8 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate()
     {
+        // Check is the player is on the floot to permit to jump
+        isGrounded = Physics2D.OverlapCircle(GroundCheck.position, groundCheckRadius, collisionLayers);
 
         //Fonction of the Player to move
         MovePlayer(horizontalMovement);
